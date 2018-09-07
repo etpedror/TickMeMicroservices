@@ -1,0 +1,120 @@
+﻿@model TickMe.Models.TicketBuyViewModel
+
+@{
+    ViewData["Title"] = "Buy Ticket";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Buy Ticket</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.evnt.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.evnt.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.evnt.StartMoment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.evnt.StartMoment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.evnt.Duration)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.evnt.Duration)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.evnt.Venue)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.evnt.Venue)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.evnt.Price)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.evnt.Price)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.evnt.TotalAvailableTickets)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.evnt.TotalAvailableTickets)
+        </dd>
+    </dl>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.user.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.user.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.user.AuthId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.user.AuthId)
+        </dd>
+    </dl>
+    <hr />
+    <h2>Payment Data</h2>
+    <form method="post" asp-action="Buy">
+        <div class="row">
+            <div class="col-lg-12">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @Html.HiddenFor(model => model.evnt.Id)
+                <div class="form-group col-lg-2">
+                    @Html.DisplayNameFor(model => model.paymentData.CardNumber)<br />
+                    @Html.EditorFor(model => model.paymentData.CardNumber)
+                    <span class="text-danger">
+                        <br />@Html.ValidationMessageFor(model => model.paymentData.CardNumber)
+                    </span>
+                </div>
+                <div class="form-group col-lg-2">
+                    @Html.DisplayNameFor(model => model.paymentData.NameOnCard)<br />
+                    @Html.EditorFor(model => model.paymentData.NameOnCard)
+                    <span class="text-danger">
+                        <br />@Html.ValidationMessageFor(model => model.paymentData.NameOnCard)
+                    </span>
+                </div>
+                <div class="form-group col-lg-2">
+                    @Html.DisplayNameFor(model => model.paymentData.ValidMonth)<br />
+                    @Html.EditorFor(model => model.paymentData.ValidMonth)
+                    <span class="text-danger">
+                        <br />@Html.ValidationMessageFor(model => model.paymentData.ValidMonth)
+                    </span>
+                </div>
+                <div class="form-group col-lg-2">
+                    @Html.DisplayNameFor(model => model.paymentData.ValidYear)<br />
+                    @Html.EditorFor(model => model.paymentData.ValidYear)
+                    <span class="text-danger">
+                        <br />@Html.ValidationMessageFor(model => model.paymentData.ValidYear)
+                    </span>
+                </div>
+                <div class="form-group col-lg-2">
+                    @Html.DisplayNameFor(model => model.paymentData.SecurityCode)<br />
+                    @Html.EditorFor(model => model.paymentData.SecurityCode)
+                    <span class="text-danger">
+                        <br />@Html.ValidationMessageFor(model => model.paymentData.SecurityCode)
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group col-lg-6">
+                    <a asp-action="Index" class="btn btn-large btn-primary pull-left" data-toggle="tooltip" data-placement="botton" title="Back"><span aria-hidden="true" class="glyphicon glyphicon-arrow-left"></span>&nbsp;Back</a>
+                </div>
+                <div class="form-group col-lg-6">
+                    <button type="submit" class="btn btn-large btn-success pull-right" data-toggle="tooltip" data-placement="botton" title="Confirm">Confirm&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-ok"></span></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

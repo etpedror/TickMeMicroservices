@@ -1,0 +1,63 @@
+﻿@model IEnumerable<TickMe.Models.MyEventsViewModel>
+
+@{
+    ViewData["Title"] = "MyEvents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>My Events</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Serial Number
+            </th>
+            <th>
+                Event
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                Duration
+            </th>
+            <th>
+                Price Paid
+            </th>
+            <th>
+                Payment Date
+            </th>
+            <th>
+                View &amp; Print
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ticket.SerialNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartMoment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ticket.PricePaid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentDate)
+            </td>
+            <td>
+                <a asp-action="ViewTicket" asp-route-id="@item.Ticket.Id" data-toggle="tooltip" data-placement="bottom" title="View and Print"><i class="glyphicon glyphicon-print"></i></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

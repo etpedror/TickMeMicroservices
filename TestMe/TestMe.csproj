@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="tickmecontainerkey.txt" />
+    <None Remove="tickmecontainerskey.pub" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TickMeHelpers\TickMeHelpers.csproj" />
+  </ItemGroup>
+
+</Project>

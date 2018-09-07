@@ -1,0 +1,66 @@
+﻿@model IEnumerable<TickMeHelpers.Event>
+
+@{
+    ViewData["Title"] = "Events";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Events</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <!--<th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>-->
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartMoment)
+                &nbsp;@@&nbsp;
+                @Html.DisplayNameFor(model => model.Venue)
+            </th>
+            <th>
+                <span class="pull-right">
+                    @Html.DisplayNameFor(model => model.Duration)
+                </span>
+            </th>
+            <th>
+                <span class="pull-right">
+                    @Html.DisplayNameFor(model => model.Price)
+                </span>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.HiddenFor(modelItem => item.Id)
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartMoment)
+                    &nbsp;@@&nbsp;
+                    @Html.DisplayFor(modelItem => item.Venue)
+                </td>
+                <td>
+                    <span class="pull-right">
+                        @Html.DisplayFor(modelItem => item.Duration)
+                    </span>
+                </td>
+                <td>
+                    <span class="pull-right">
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </span>
+                </td>
+                <td>
+                    <a href="~/Event/Buy/@item.Id" data-toggle="tooltip" data-placement="bottom" title="Buy"><i class="glyphicon glyphicon-shopping-cart"></i></a>&nbsp;
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
