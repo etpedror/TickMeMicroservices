@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  tickme:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=44391
+    ports:
+      - "54835:80"
+      - "44391:443"
