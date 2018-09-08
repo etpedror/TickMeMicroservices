@@ -15,6 +15,16 @@ namespace TickMePayments.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
+        // api/get
+        [HttpGet]
+        public HttpResponseMessage Get()
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("OK")
+            };
+            return response;
+        }
         // POST api/values
         [HttpPost]
         public HttpResponseMessage Post([FromBody] string value)
