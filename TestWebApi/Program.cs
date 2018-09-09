@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace TickMeTickets
+namespace TestWebApi
 {
     public class Program
     {
@@ -19,15 +19,6 @@ namespace TickMeTickets
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, config) =>
-                {
-                    var builtConfig = config.Build();
-
-                    config.AddAzureKeyVault(
-                        $"https://{builtConfig["KeyVault:Vault"]}.vault.azure.net/",
-                        builtConfig["KeyVault:ClientId"],
-                        builtConfig["KeyVault:ClientSecret"]);
-                })
                 .UseStartup<Startup>();
     }
 }

@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,8 +13,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using TickMe.Models;
 using TickMeHelpers;
+using TickMeHelpers.ApiModels;
 
 namespace TickMe.Controllers
 {
@@ -64,7 +71,7 @@ namespace TickMe.Controllers
             var user = TickMeHelpers.User.FromUser(User);
             var savedUser = await UserManager.GetUserByAuthId(user);
             var tickets = await TicketManager.GetUserTickets(savedUser.Id);
-            foreach(var ticket in tickets)
+            foreach (var ticket in tickets)
             {
                 var evnt = await EventManager.Get(ticket.EventId);
                 dynamic pdata = JObject.Parse(JsonConvert.DeserializeObject<PaymentData>(ticket.PaymentData).TransactionData);
@@ -143,7 +150,7 @@ namespace TickMe.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Buy(IFormCollection collection)
-        {   
+        {
             try
             {
                 var buyModel = await PrepareTicketBuyViewModel(Guid.Parse(collection["evnt.Id"]));
@@ -160,7 +167,8 @@ namespace TickMe.Controllers
                     SecurityCode = collection["paymentData.SecurityCode"],
                     Value = buyModel.evnt.Price
                 };
-                paymentData = PaymentManagement.ProcessPayment(paymentData);
+                paymentData = await MakePayment(paymentData);
+
                 buyModel.paymentData = paymentData;
                 if (buyModel.user.Id == Guid.Empty)
                 {
@@ -168,7 +176,14 @@ namespace TickMe.Controllers
                 }
                 if (paymentData.TransactionSuccessful)
                 {
-                    var ticket = await TicketManager.IssueEventTicket(buyModel.evnt, buyModel.user, paymentData.ToString());
+                    //var ticket = await TicketManager.IssueEventTicket(buyModel.evnt, buyModel.user, paymentData.ToString());
+                    var ticketBuyModel = new TicketBuyModel()
+                    {
+                        EventId = buyModel.evnt.Id,
+                        UserId = buyModel.user.Id,
+                        PaymentData = paymentData.ToString()
+                    };
+                    var ticket = await IssueTicket(ticketBuyModel);
                     return RedirectToAction("ViewTicket", new { id = ticket.Id });
                 }
                 return View("Error");
@@ -247,5 +262,44 @@ namespace TickMe.Controllers
                 return View();
             }
         }
+
+        public async Task<Ticket> IssueTicket(TicketBuyModel buyModel)
+        {
+            using (var client = new HttpClient())
+            {
+                var request = new HttpRequestMessage
+                {
+                    RequestUri = new Uri(Configuration["TicketApiUrl"]),
+                    Method = HttpMethod.Post
+                };
+                request.Content = new StringContent(JsonConvert.SerializeObject(buyModel));
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+
+                //request.Content.Headers.ContentType = new MediaTypeHeaderValue(parameters.ContentType);
+
+                var result = client.SendAsync(request).Result;
+                result.EnsureSuccessStatusCode();
+                return JsonConvert.DeserializeObject<Ticket>(await result.Content.ReadAsStringAsync());
+            }
+        }
+
+        public async Task<PaymentData> MakePayment(PaymentData paymentData)
+        {
+            using (var client = new HttpClient())
+            {
+                var request = new HttpRequestMessage
+                {
+                    RequestUri = new Uri(Configuration["PaymentApiUrl"]),
+                    Method = HttpMethod.Post
+                };
+                request.Content = new StringContent(JsonConvert.SerializeObject(paymentData));
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                
+                var result = client.SendAsync(request).Result;
+                result.EnsureSuccessStatusCode();
+                return JsonConvert.DeserializeObject<PaymentData>(await result.Content.ReadAsStringAsync());
+            }
+        }
+
     }
 }

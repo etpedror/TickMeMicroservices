@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
 using TickMeHelpers;
 
 namespace TickMePayments.Controllers
@@ -15,35 +9,41 @@ namespace TickMePayments.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        // api/get
+        // GET api/payment
         [HttpGet]
-        public HttpResponseMessage Get()
+        public string Get()
         {
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent("OK")
-            };
-            return response;
+            Response.StatusCode = (int)HttpStatusCode.OK;
+            return "{'status':'Service Up'}";
         }
-        // POST api/values
+
+        // POST api/payment
         [HttpPost]
-        public HttpResponseMessage Post([FromBody] string value)
+        public string Post([FromBody] string value)
         {
-            if (String.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(value))
             {
-                var responseError = new HttpResponseMessage(HttpStatusCode.BadRequest)
-                {
-                    Content = new StringContent("Bad Request")
-                };
-                return responseError;
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return "{'error':'Bad Request'}";
             }
-            var paymentData = JsonConvert.DeserializeObject<PaymentData>(value);
-            paymentData = PaymentManagement.ProcessPayment(paymentData);
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            var payData = JsonConvert.DeserializeObject<PaymentData>(value);
+            if (payData == null)
             {
-                Content = new StringContent(paymentData.ToString())
-            };
-            return response;
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return "{'error':'Bad Request'}";
+            }           
+            
+            try
+            {
+                payData = PaymentManagement.ProcessPayment(payData);
+                Response.StatusCode = (int)HttpStatusCode.OK;
+                return payData.ToString();
+            }
+            catch
+            {
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                return "{'error':'Server couldn't process payment'}";
+            }
         }
     }
 }

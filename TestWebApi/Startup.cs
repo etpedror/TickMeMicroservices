@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace TickMeTickets
+namespace TestWebApi
 {
     public class Startup
     {
@@ -26,7 +26,6 @@ namespace TickMeTickets
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddMvc(o => o.InputFormatters.Insert(0, new RawRequestBodyFormatter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
