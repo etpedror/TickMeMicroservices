@@ -274,7 +274,7 @@ Your Ticket service is now set up.
 
 #### CHANGES TO THE TICKME WEB APP
 
-The TickMe webapp also needs to be changed to work make rest requests instead of handling the operations itself. To do that , follow the next steps.
+The TickMe webapp also needs to be changed to work make rest requests instead of handling the operations itself. To do that follow the next steps.
 Add the following values to the _appsettings.json_ file:
 ```javascript
   "TicketApiUrl": "http://localhost:50082/api/tickets",
