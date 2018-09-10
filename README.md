@@ -370,4 +370,5 @@ public async Task<ActionResult> Buy(IFormCollection collection)
 ```
 The changes are now complete, and you have just modularized your application. 
 If you were unable to follow all the steps, you can access the desired code at https://github.com/etpedror/TickMeMicroservices.
-The next step is to bring containers in!
+
+The next step is to bring containers in, and you can follow that [here](https://github.com/etpedror/TickMeContainers)!
